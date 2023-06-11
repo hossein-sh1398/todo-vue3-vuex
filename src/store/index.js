@@ -1,26 +1,38 @@
-import axios from 'axios'
 import { createStore } from 'vuex'
 import Swal from 'sweetalert2'
+import apiTask from '../api/apiTask.js'
 
 const store = createStore({
     state: {
-        tasks: [{ id: 12, title: 'title' }]
+        tasks: [{ id: 12, title: 'title' }],
+        paginationInfo: {
+            currentPage: 1,
+            totalPage: 0,
+        },
     },
     getters: {
         allTasks(state) {
             return state.tasks
+        },
+        getPaginationInfo(state) {
+            return state.paginationInfo
         }
     },
     mutations: {
         setTasks(state, tasks) {
             state.tasks = tasks
+        },
+        setPaginationInfo(state, paginationInfo) {
+            state.paginationInfo = paginationInfo
         }
     },
     actions: {
-        async fetchTasksAction({ commit }) {
+        async fetchTasksAction({ commit }, page) {
             try {
-                const response = await axios.get('http://localhost:8000/api/tasks')
+                const response = await apiTask.get('tasks?page=' + page)
+
                 commit('setTasks', response.data.tasks)
+                commit('setPaginationInfo', response.data.paginationInfo)
             } catch (err) {
                 Swal.fire({
                     icon: 'error',
@@ -32,7 +44,7 @@ const store = createStore({
         },
         async createTaskAction({ dispatch }, title) {
             try {
-                const response = await axios.post('http://localhost:8000/api/tasks', {
+                const response = await apiTask.post('tasks', {
                     title: title
                 })
 

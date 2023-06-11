@@ -28,6 +28,10 @@
                     </div>
                 </div>
             </div>
+            <div class="card-footer">
+                <pagination :currentPage="paginationInfo.currentPage" :totalPage="paginationInfo.totalPage"
+                    @pagechanged="pageChanged"></pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -36,29 +40,39 @@
 import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
 import CreateTask from './create-task.vue'
+import Pagination from './pagination.vue'
 
 export default {
     setup() {
         const store = useStore()
         let loading = ref(true)
         const tasks = computed(() => store.getters.allTasks)
+        const paginationInfo = computed(() => store.getters.getPaginationInfo)
 
-        async function fetchTasks() {
-            await store.dispatch('fetchTasksAction')
+        async function fetchTasks(page = 1) {
+            await store.dispatch('fetchTasksAction', page)
             setTimeout(() => {
                 loading.value = false
             }, 1000)
         }
+
         fetchTasks()
+
+        const pageChanged = (page) => {
+            fetchTasks(page)
+        }
 
         return {
             tasks,
             fetchTasks,
-            loading
+            loading,
+            pageChanged,
+            paginationInfo
         }
     },
     components: {
         CreateTask,
+        Pagination
     }
 }
 </script>
