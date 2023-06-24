@@ -11,16 +11,24 @@
                     <li class="nav-item">
                         <router-link :to="{ name: 'tasks' }" class="nav-link">Tasks</router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link :to="{ name: 'products' }" class="nav-link">Products</router-link>
+                    </li>
                 </ul>
+                <HeaderCart />
 
             </div>
         </div>
     </nav>
 </template>
 <script>
+import HeaderCart from './header-cart.vue'
 export default {
     setup() {
 
+    },
+    components: {
+        HeaderCart
     }
 }
 

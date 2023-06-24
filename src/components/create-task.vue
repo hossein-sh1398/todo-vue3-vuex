@@ -8,6 +8,9 @@
                 <div class="row align-items-center">
                     <div class="col-md-4">
                         <input type="text" v-model="title" class="form-control">
+                        <p v-if="errors.title" class="text-danger">
+                            {{ errors.title[0] }}
+                        </p>
                     </div>
                     <div class="col-md-auto">
                         <button class="btn btn-primary btn-sm">Save</button>
@@ -19,19 +22,29 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
     setup() {
         const store = useStore()
-        let title = ref()
+        let title = ref('')
+
+        let errors = computed(() => store.getters['todos/getErrors'])
         const createTasks = async () => {
-            let a = await store.dispatch('createTaskAction', title.value)
+            try {
+                let res = await store.dispatch('todos/createTaskAction', title.value)
+                if (res) {
+                    title.value = ''
+                }
+
+            } catch (err) {
+
+            }
         }
 
         return {
-            createTasks, title
+            createTasks, title, errors
         }
     }
 }
