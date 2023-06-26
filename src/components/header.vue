@@ -14,6 +14,9 @@
                     <li class="nav-item">
                         <router-link :to="{ name: 'products' }" class="nav-link">Products</router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link :to="{ name: 'upload' }" class="nav-link">Upload</router-link>
+                    </li>
                 </ul>
                 <HeaderCart />
 
